@@ -18,6 +18,10 @@ if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
   while IFS= read -r -d '' item; do
     jenkins_opts_array+=( "$item" )
   done < <([[ $JENKINS_OPTS ]] && xargs printf '%s\0' <<<"$JENKINS_OPTS")
+  
+  /usr/bin/mvn -f /var/telerik-appbuilder-plugin/pom.xml clean install
+  /bin/mkdir -p /var/jenkins_home/plugins/
+  /bin/cp /var/telerik-appbuilder-plugin/target/telerik-appbuilder-plugin.hpi /var/jenkins_home/plugins/
 
   exec java "${java_opts_array[@]}" -jar /usr/share/jenkins/jenkins.war "${jenkins_opts_array[@]}" "$@"
 fi
